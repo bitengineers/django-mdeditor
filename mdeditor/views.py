@@ -48,15 +48,6 @@ class UploadView(generic.View):
 
         # image floder check
         file_path = os.path.join(media_root, MDEDITOR_CONFIGS['image_folder'])
-        if not default_storage.exists(file_path):
-            try:
-                default_storage.makedirs(file_path)
-            except Exception as err:
-                return JsonResponse({
-                    'success': 0,
-                    'message': "上传失败：%s" % str(err),
-                    'url': ""
-                })
 
         # save image
         file_full_name = '%s_%s.%s' % (file_name,
