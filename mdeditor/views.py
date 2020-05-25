@@ -53,12 +53,15 @@ class UploadView(generic.View):
         file_full_name = '%s_%s.%s' % (file_name,
                                        '{0:%Y%m%d%H%M%S%f}'.format(datetime.datetime.now()),
                                        file_extension)
+        image_url = default_storage.url(os.path.join(MDEDITOR_CONFIGS['image_folder'], file_full_name))
         with default_storage.open(os.path.join(file_path, file_full_name), 'wb+') as file:
             for chunk in upload_image.chunks():
                 file.write(chunk)
 
-        return JsonResponse({'success': 1,
-                             'message': "上传成功！",
-                             'url': os.path.join(settings.MEDIA_URL,
-                                                 MDEDITOR_CONFIGS['image_folder'],
-                                                 file_full_name)})
+        return JsonResponse({
+            'success': 1,
+            'message': "上传成功！",
+            'url': image_url if image_url else os.path.join(settings.MEDIA_URL,
+                                                            MDEDITOR_CONFIGS['image_folder'],
+                                                            file_full_name)
+        })
